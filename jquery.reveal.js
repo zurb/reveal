@@ -70,6 +70,9 @@
 				modalBG.css({"cursor":"pointer"})
 				modalBG.bind('click.modalEvent',closeModal)
 			}
+			$('body').keyup(function(e) {
+        		if(e.keyCode==27){ closeModal(); } // 27 is the keycode for the Escape key
+			});
 			
     		
 /*---------------------------
