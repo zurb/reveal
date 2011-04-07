@@ -32,9 +32,9 @@
         
         var defaults = {  
 	    	animation: 'fadeAndPop', //fade, fadeAndPop, none
-		    animationspeed: 300, //how fast animtions are
-		    closeonbackgroundclick: true, //if you click background will modal close?
-		    dismissmodalclass: 'close-reveal-modal' //the class of a button or element that will close an open modal
+		    animationSpeed: 300, //how fast animtions are
+		    closeOnBackgroundClick: true, //if you click background will modal close?
+		    dismissModalClass: 'close-reveal-modal' //the class of a button or element that will close an open modal
     	}; 
     	
         //Extend dem' options
@@ -65,10 +65,10 @@
     		openModal();
 			
 			//Close Modal Listeners
-			var closeButton = $('.' + options.dismissmodalclass).bind('click.modalEvent',closeModal)
-			if(options.closeonbackgroundclick) {
-				modalBG.css({"cursor":"pointer"})
-				modalBG.bind('click.modalEvent',closeModal)
+			var closeButton = $('.' + options.dismissModalClass).bind('click.modalEvent', closeModal);
+			if(options.closeOnBackgroundClick) {
+				modalBG.css({"cursor":"pointer"});
+				modalBG.bind('click.modalEvent', closeModal);
 			}
 			
     		
@@ -78,28 +78,40 @@
 			//Entrance Animations
 			function openModal() {
 				modalBG.unbind('click.modalEvent');
-				$('.' + options.dismissmodalclass).unbind('click.modalEvent');
+				$('.' + options.dismissModalClass).unbind('click.modalEvent');
 				if(!locked) {
 					lockModal();
 					if(options.animation == "fadeAndPop") {
-						modal.css({'top': $(document).scrollTop()-topOffset, 'opacity' : 0, 'visibility' : 'visible'});
-						modalBG.fadeIn(options.animationspeed/2);
-						modal.delay(options.animationspeed/2).animate({
+						modal.css({
+							'top': $(document).scrollTop() - topOffset, 
+							'opacity' : 0, 
+							'visibility' : 'visible'
+						});
+						
+						modalBG.fadeIn(options.animationSpeed/2);
+						modal.delay(options.animationSpeed/2).animate({
 							"top": $(document).scrollTop()+topMeasure,
 							"opacity" : 1
-						}, options.animationspeed,unlockModal());					
-					}
-					if(options.animation == "fade") {
-						modal.css({'opacity' : 0, 'visibility' : 'visible', 'top': $(document).scrollTop()+topMeasure});
-						modalBG.fadeIn(options.animationspeed/2);
-						modal.delay(options.animationspeed/2).animate({
+						}, options.animationSpeed, unlockModal);					
+					} else if(options.animation == "fade") {
+						modal.css({
+							'opacity' : 0, 
+							'visibility' : 'visible', 
+							'top': $(document).scrollTop() + topMeasure
+						});
+						
+						modalBG.fadeIn(options.animationSpeed/2);
+						modal.delay(options.animationSpeed/2).animate({
 							"opacity" : 1
-						}, options.animationspeed,unlockModal());					
-					} 
-					if(options.animation == "none") {
-						modal.css({'visibility' : 'visible', 'top':$(document).scrollTop()+topMeasure});
+						}, options.animationSpeed, unlockModal);					
+					} else if(options.animation == "none") {
+						modal.css({
+							'visibility' : 'visible', 
+							'top':$(document).scrollTop() + topMeasure
+						});
+						
 						modalBG.css({"display":"block"});	
-						unlockModal()				
+						unlockModal();			
 					}   
 				}
 			}    	
@@ -108,27 +120,35 @@
 			function closeModal() {
 				if(!locked) {
 					lockModal();
+					
+					function afterAnimation(){
+						modal.css({
+							'opacity' : 1, 
+							'visibility' : 'hidden', 
+							'top' : topMeasure
+						});
+						
+						unlockModal();
+					}
+					
 					if(options.animation == "fadeAndPop") {
-						modalBG.delay(options.animationspeed).fadeOut(options.animationspeed);
+						modalBG.delay(options.animationSpeed).fadeOut(options.animationSpeed);
 						modal.animate({
 							"top":  $(document).scrollTop()-topOffset,
 							"opacity" : 0
-						}, options.animationspeed/2, function() {
-							modal.css({'top':topMeasure, 'opacity' : 1, 'visibility' : 'hidden'});
-							unlockModal();
-						});					
-					}  	
-					if(options.animation == "fade") {
-						modalBG.delay(options.animationspeed).fadeOut(options.animationspeed);
+						}, options.animationSpeed/2, afterAnimation);					
+					} else if(options.animation == "fade") {
+						modalBG.delay(options.animationSpeed).fadeOut(options.animationSpeed);
+						
 						modal.animate({
 							"opacity" : 0
-						}, options.animationspeed, function() {
-							modal.css({'opacity' : 1, 'visibility' : 'hidden', 'top' : topMeasure});
-							unlockModal();
-						});					
-					}  	
-					if(options.animation == "none") {
-						modal.css({'visibility' : 'hidden', 'top' : topMeasure});
+						}, options.animationSpeed, afterAnimation);					
+					} else if(options.animation == "none") {
+						modal.css({
+							'visibility' : 'hidden', 
+							'top' : topMeasure
+						});
+						
 						modalBG.css({'display' : 'none'});	
 					}   			
 				}
