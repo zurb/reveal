@@ -34,7 +34,8 @@
 	    	animation: 'fadeAndPop', // fade, fadeAndPop, none
 		    animationSpeed: 300, // how fast animtions are
 		    closeOnBackgroundClick: true, // if you click background will modal close?
-			closeOnEscapeKey: true, // if you press the Escape key will modal close?
+			closeOnEscapeKey: true, // if you press the Escape key will modal close?,
+			onClose: function(){},
 		    dismissModalClass: 'close-reveal-modal' // the class of a button or element that will close an open modal
     	}; 
     	
@@ -88,6 +89,7 @@
 			function openModal() {
 				modalBG.unbind('click.modalEvent');
 				$('.' + options.dismissModalClass).unbind('click.modalEvent');
+				$(document).unbind('keyup.modalEvent');
 				
 				if(!locked) {
 					lockModal();
@@ -139,6 +141,7 @@
 						});
 						
 						unlockModal();
+						options.onClose(this);
 					}
 					
 					if(options.animation == "fadeAndPop") {
@@ -160,6 +163,7 @@
 						});
 						
 						modalBG.css({'display' : 'none'});	
+						options.onClose(this);
 					}   			
 				}
 			}
