@@ -31,13 +31,14 @@
         
         
         var defaults = {  
-	    	animation: 'fadeAndPop', //fade, fadeAndPop, none
-		    animationSpeed: 300, //how fast animtions are
-		    closeOnBackgroundClick: true, //if you click background will modal close?
-		    dismissModalClass: 'close-reveal-modal' //the class of a button or element that will close an open modal
+	    	animation: 'fadeAndPop', // fade, fadeAndPop, none
+		    animationSpeed: 300, // how fast animtions are
+		    closeOnBackgroundClick: true, // if you click background will modal close?
+			closeOnEscapeKey: true, // if you press the Escape key will modal close?
+		    dismissModalClass: 'close-reveal-modal' // the class of a button or element that will close an open modal
     	}; 
     	
-        //Extend dem' options
+        // Extend dem' options
         var options = $.extend({}, defaults, options); 
 	
         return this.each(function() {
@@ -61,24 +62,33 @@
 /*---------------------------
  Open and add Closing Listeners
 ----------------------------*/
-        	//Open Modal Immediately
+        	// Open Modal Immediately
     		openModal();
 			
-			//Close Modal Listeners
+			// Close Modal Listeners
 			var closeButton = $('.' + options.dismissModalClass).bind('click.modalEvent', closeModal);
+			
 			if(options.closeOnBackgroundClick) {
 				modalBG.css({"cursor":"pointer"});
 				modalBG.bind('click.modalEvent', closeModal);
 			}
 			
+			if(options.closeOnEscapeKey) {
+				$(document).bind('keyup.modalEvent', function(event){
+					if(event.which == 27) {
+						closeModal();
+					}
+				});
+			}
     		
 /*---------------------------
  Open & Close Animations
 ----------------------------*/
-			//Entrance Animations
+			// Entrance Animations
 			function openModal() {
 				modalBG.unbind('click.modalEvent');
 				$('.' + options.dismissModalClass).unbind('click.modalEvent');
+				
 				if(!locked) {
 					lockModal();
 					if(options.animation == "fadeAndPop") {
@@ -116,7 +126,7 @@
 				}
 			}    	
 			
-			//Closing Animation
+			// Closing Animation
 			function closeModal() {
 				if(!locked) {
 					lockModal();
@@ -160,11 +170,12 @@
 			function unlockModal() { 
 				locked = false;
 			}
+			
 			function lockModal() {
 				locked = true;
 			}	
 			
-        });//each call
-    }//orbit plugin call
+        });
+    }
 })(jQuery);
         
