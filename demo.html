@@ -19,21 +19,46 @@
 		
 		<style type="text/css">
 			body { font-family: "HelveticaNeue","Helvetica-Neue", "Helvetica", "Arial", sans-serif; }
-			.big-link { display:block; margin-top: 100px; text-align: center; font-size: 70px; color: #06f; }
+			a { color: #06f; display: block; text-align: center; }
+			#big-link { margin-top: 100px; font-size: 70px; }
+			#small-link { margin-top: 30px; font-size: 30px; }
+			#console { font-family: "Monaco", "Courier New", "Courier", serif; text-align: center; }
 		</style>
 		
 	</head>
 	<body>
 
-		<a href="#" class="big-link" data-reveal-id="myModal">
+		<a href="#" id="big-link" data-reveal-id="myModal">
 			Launch The Modal
 		</a>	
+		
+		<a href="#" id="small-link">Programmatically launch modal with callback</a>
+		
+		<div id="console"></div>
 
 		<div id="myModal" class="reveal-modal">
 			<h1>Reveal Modal Goodness</h1>
 			<p>This is a default modal in all its glory, but any of the styles here can easily be changed in the CSS.</p>
+			<p><small>You can press Esc to close too!</small></p>
 			<a class="close-reveal-modal">&#215;</a>
 		</div>
+		
+		<script type="text/javascript">
+		    var count = 0;
+		
+			$('#small-link').click(function(event) {
+				event.preventDefault();
+				
+				$('#myModal').reveal({
+					onClose: function(modal) {
+						count++;
+						$('#console').append('<p>&gt; Modal closed ' + count + '</p>');
+					}
+				})
+				
+				return false;
+			});
+		</script>
 			
 	</body>
 </html>
