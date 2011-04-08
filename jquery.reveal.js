@@ -40,7 +40,7 @@
         }; 
         
         // Extend dem' options
-        var options = $.extend({}, defaults, options); 
+        options = $.extend(defaults, options); 
     
         return this.each(function() {
         
@@ -56,7 +56,7 @@
 /*---------------------------
  Create Modal BG
 ----------------------------*/
-            if(modalBG.length == 0) {
+            if(!modalBG.length) {
                 modalBG = $('<div class="reveal-modal-bg" />').insertAfter(modal);
             }           
             
@@ -96,33 +96,31 @@
                     if(options.animation == "fadeAndPop") {
                         modal.css({
                             'top': $(document).scrollTop() - topOffset, 
-                            'opacity' : 0, 
-                            'visibility' : 'visible'
+                            'opacity': 0, 
+                            'visibility': 'visible'
                         });
                         
-                        modalBG.fadeIn(options.animationSpeed/2);
-                        modal.delay(options.animationSpeed/2).animate({
-                            "top": $(document).scrollTop()+topMeasure,
-                            "opacity" : 1
+                        modalBG.fadeIn(options.animationSpeed / 2);
+                        modal.delay(options.animationSpeed / 2).animate({
+                            "top": $(document).scrollTop() + topMeasure,
+                            "opacity": 1
                         }, options.animationSpeed, unlockModal);                    
                     } else if(options.animation == "fade") {
                         modal.css({
-                            'opacity' : 0, 
-                            'visibility' : 'visible', 
+                            'opacity': 0, 
+                            'visibiliy': 'visible', 
                             'top': $(document).scrollTop() + topMeasure
                         });
                         
-                        modalBG.fadeIn(options.animationSpeed/2);
-                        modal.delay(options.animationSpeed/2).animate({
-                            "opacity" : 1
-                        }, options.animationSpeed, unlockModal);                    
+                        modalBG.fadeIn(options.animationSpeed / 2);
+                        modal.delay(options.animationSpeed / 2).animate({"opacity": 1}, options.animationSpeed, unlockModal);                    
                     } else if(options.animation == "none") {
                         modal.css({
-                            'visibility' : 'visible', 
-                            'top':$(document).scrollTop() + topMeasure
+                            'visibility': 'visible', 
+                            'top': $(document).scrollTop() + topMeasure
                         });
                         
-                        modalBG.css({"display":"block"});   
+                        modalBG.css({"display": "block"});   
                         unlockModal();          
                     }   
                 }
@@ -133,11 +131,11 @@
                 if(!locked) {
                     lockModal();
                     
-                    function afterAnimation(){
+                    var afterAnimation = function(){
                         modal.css({
-                            'opacity' : 1, 
-                            'visibility' : 'hidden', 
-                            'top' : topMeasure
+                            'opacity': 1, 
+                            'visibility': 'hidden', 
+                            'top': topMeasure
                         });
                         
                         unlockModal();
@@ -146,23 +144,22 @@
                     
                     if(options.animation == "fadeAndPop") {
                         modalBG.delay(options.animationSpeed).fadeOut(options.animationSpeed);
+
                         modal.animate({
-                            "top":  $(document).scrollTop()-topOffset,
+                            "top":  $(document).scrollTop() - topOffset,
                             "opacity" : 0
-                        }, options.animationSpeed/2, afterAnimation);                   
+                        }, options.animationSpeed / 2, afterAnimation);                   
                     } else if(options.animation == "fade") {
                         modalBG.delay(options.animationSpeed).fadeOut(options.animationSpeed);
                         
-                        modal.animate({
-                            "opacity" : 0
-                        }, options.animationSpeed, afterAnimation);                 
+                        modal.animate({"opacity" : 0}, options.animationSpeed, afterAnimation);                 
                     } else if(options.animation == "none") {
                         modal.css({
-                            'visibility' : 'hidden', 
-                            'top' : topMeasure
+                            'visibility': 'hidden', 
+                            'top': topMeasure
                         });
                         
-                        modalBG.css({'display' : 'none'});  
+                        modalBG.css({'display': 'none'});  
                         options.onClose(this);
                     }               
                 }
@@ -180,6 +177,6 @@
             }   
             
         });
-    }
+    };
 })(jQuery);
         
