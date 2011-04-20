@@ -66,7 +66,7 @@
 			
 			//Close Modal Listeners
 			var closeButton = $('.' + options.dismissmodalclass).bind('click.modalEvent',closeModal)
-                        $(document).bind('reveal:close', closeModal);
+      modal.bind('reveal:close', closeModal);
 			if(options.closeonbackgroundclick) {
 				modalBG.css({"cursor":"pointer"})
 				modalBG.bind('click.modalEvent',closeModal)
