@@ -89,7 +89,7 @@
 						modal.css({'top': $(document).scrollTop()-topOffset, 'opacity' : 0, 'visibility' : 'visible'});
 						modalBG.fadeIn(options.animationspeed/2);
 						modal.delay(options.animationspeed/2).animate({
-							"top": $(document).scrollTop()+topMeasure,
+							"top": $(document).scrollTop()+topMeasure + 'px',
 							"opacity" : 1
 						}, options.animationspeed,unlockModal());					
 					}
@@ -113,9 +113,10 @@
 				if(!locked) {
 					lockModal();
 					if(options.animation == "fadeAndPop") {
+            // debugger;
 						modalBG.delay(options.animationspeed).fadeOut(options.animationspeed);
 						modal.animate({
-							"top":  $(document).scrollTop()-topOffset,
+							"top":  $(document).scrollTop()-topOffset + 'px',
 							"opacity" : 0
 						}, options.animationspeed/2, function() {
 							modal.css({'top':topMeasure, 'opacity' : 1, 'visibility' : 'hidden'});
