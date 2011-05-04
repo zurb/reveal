@@ -57,31 +57,13 @@
 			if(modalBG.length == 0) {
 				modalBG = $('<div class="reveal-modal-bg" />').insertAfter(modal);
 			}		    
-        	
-/*---------------------------
- Open and add Closing Listeners
-----------------------------*/
-        	//Open Modal Immediately
-    		openModal();
-			
-			//Close Modal Listeners
-			var closeButton = $('.' + options.dismissmodalclass).bind('click.modalEvent',closeModal)
-      modal.bind('reveal:close', closeModal);
-			if(options.closeonbackgroundclick) {
-				modalBG.css({"cursor":"pointer"})
-				modalBG.bind('click.modalEvent',closeModal)
-			}
-			$('body').keyup(function(e) {
-        		if(e.which===27){ closeModal(); } // 27 is the keycode for the Escape key
-			});
-			
-    		
+     
 /*---------------------------
  Open & Close Animations
 ----------------------------*/
 			//Entrance Animations
-			function openModal() {
-				modalBG.unbind('click.modalEvent');
+			modal.bind('reveal:open', function () {
+			  modalBG.unbind('click.modalEvent');
 				$('.' + options.dismissmodalclass).unbind('click.modalEvent');
 				if(!locked) {
 					lockModal();
@@ -105,16 +87,15 @@
 						modalBG.css({"display":"block"});	
 						unlockModal()				
 					}
-					modal.trigger('modalOpened');
 				}
-			}    	
-			
+				modal.unbind('reveal:open');
+			}); 	
+
 			//Closing Animation
-			function closeModal() {
-				if(!locked) {
+			modal.bind('reveal:close', function () {
+			  if(!locked) {
 					lockModal();
 					if(options.animation == "fadeAndPop") {
-            // debugger;
 						modalBG.delay(options.animationspeed).fadeOut(options.animationspeed);
 						modal.animate({
 							"top":  $(document).scrollTop()-topOffset + 'px',
@@ -136,10 +117,32 @@
 					if(options.animation == "none") {
 						modal.css({'visibility' : 'hidden', 'top' : topMeasure});
 						modalBG.css({'display' : 'none'});	
-					}
-					modal.trigger('modalClosed'); 			
+					}		
 				}
+				modal.unbind('reveal:close');
+			});     
+   	
+/*---------------------------
+ Open and add Closing Listeners
+----------------------------*/
+        	//Open Modal Immediately
+    	modal.trigger('reveal:open')
+			
+			//Close Modal Listeners
+			var closeButton = $('.' + options.dismissmodalclass).bind('click.modalEvent', function () {
+			  modal.trigger('reveal:close')
+			});
+			
+			if(options.closeonbackgroundclick) {
+				modalBG.css({"cursor":"pointer"})
+				modalBG.bind('click.modalEvent', function () {
+				  modal.trigger('reveal:close')
+				});
 			}
+			$('body').keyup(function(e) {
+        		if(e.which===27){ modal.trigger('reveal:close'); } // 27 is the keycode for the Escape key
+			});
+			
 			
 /*---------------------------
  Animations Locks
