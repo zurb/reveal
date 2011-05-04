@@ -104,7 +104,8 @@
 						modal.css({'visibility' : 'visible', 'top':$(document).scrollTop()+topMeasure});
 						modalBG.css({"display":"block"});	
 						unlockModal()				
-					}   
+					}
+					modal.trigger('modalOpened');
 				}
 			}    	
 			
@@ -135,7 +136,8 @@
 					if(options.animation == "none") {
 						modal.css({'visibility' : 'hidden', 'top' : topMeasure});
 						modalBG.css({'display' : 'none'});	
-					}   			
+					}
+					modal.trigger('modalClosed'); 			
 				}
 			}
 			
