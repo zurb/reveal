@@ -62,7 +62,7 @@
  Open & Close Animations
 ----------------------------*/
 			//Entrance Animations
-			modal.bind('reveal:open', function () {
+			function openAnimation() {
 			  modalBG.unbind('click.modalEvent');
 				$('.' + options.dismissmodalclass).unbind('click.modalEvent');
 				if(!locked) {
@@ -88,11 +88,12 @@
 						unlockModal()				
 					}
 				}
-				modal.unbind('reveal:open');
-			}); 	
+				modal.unbind('reveal:open', openAnimation);
+			}
+			modal.bind('reveal:open', openAnimation); 	
 
 			//Closing Animation
-			modal.bind('reveal:close', function () {
+			function closeAnimation() {
 			  if(!locked) {
 					lockModal();
 					if(options.animation == "fadeAndPop") {
@@ -119,8 +120,9 @@
 						modalBG.css({'display' : 'none'});	
 					}		
 				}
-				modal.unbind('reveal:close');
-			});     
+				modal.unbind('reveal:close', closeAnimation);
+			}
+			modal.bind('reveal:close', closeAnimation);     
    	
 /*---------------------------
  Open and add Closing Listeners
