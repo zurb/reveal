@@ -8,58 +8,33 @@
 
 
 (function($) {
-
-  /*---------------------------
-   Defaults for Reveal
-  ----------------------------*/
-
-  /*---------------------------
-   Listener for data-reveal-id attributes
-  ----------------------------*/
-
   $('a[data-reveal-id]').live('click', function(e) {
     e.preventDefault();
     var modalLocation = $(this).attr('data-reveal-id');
     $('#'+modalLocation).reveal($(this).data());
   });
 
-  /*---------------------------
-   Extend and Execute
-  ----------------------------*/
-
   $.fn.reveal = function(options) {
     var defaults = {
-      animation: 'fadeAndPop', //fade, fadeAndPop, none
-      animationspeed: 300, //how fast animtions are
-      closeonbackgroundclick: true, //if you click background will modal close?
-      dismissmodalclass: 'close-reveal-modal' //the class of a button or element that will close an open modal
+      animation: 'fadeAndPop', // fade, fadeAndPop, none
+      animationspeed: 300, // how fast animtions are
+      closeonbackgroundclick: true, // if you click background will modal close?
+      dismissmodalclass: 'close-reveal-modal' // the class of a button or element that will close an open modal
     };
 
-    //Extend dem' options
     var options = $.extend({}, defaults, options);
 
     return this.each(function() {
-
-      /*---------------------------
-       Global Variables
-      ----------------------------*/
       var modal = $(this),
         topMeasure  = parseInt(modal.css('top')),
         topOffset = modal.height() + topMeasure,
         locked = false,
         modalBG = $('.reveal-modal-bg');
 
-      /*---------------------------
-       Create Modal BG
-      ----------------------------*/
       if(modalBG.length == 0) {
         modalBG = $('<div class="reveal-modal-bg" />').insertAfter(modal);
       }
 
-      /*---------------------------
-       Open & Close Animations
-      ----------------------------*/
-      //Entrance Animations
       function openAnimation() {
         modalBG.unbind('click.modalEvent');
         $('.' + options.dismissmodalclass).unbind('click.modalEvent');
@@ -90,7 +65,6 @@
       }
       modal.bind('reveal:open', openAnimation);
 
-      //Closing Animation
       function closeAnimation() {
         if(!locked) {
           lockModal();
@@ -121,14 +95,8 @@
         modal.unbind('reveal:close', closeAnimation);
       }
       modal.bind('reveal:close', closeAnimation);
-
-      /*---------------------------
-       Open and add Closing Listeners
-      ----------------------------*/
-      //Open Modal Immediately
       modal.trigger('reveal:open')
 
-      //Close Modal Listeners
       var closeButton = $('.' + options.dismissmodalclass).bind('click.modalEvent', function () {
         modal.trigger('reveal:close')
       });
@@ -146,9 +114,6 @@
         }
       });
 
-      /*---------------------------
-       Animations Locks
-      ----------------------------*/
       function unlockModal() {
         locked = false;
       }
@@ -157,6 +122,6 @@
         locked = true;
       }
 
-    });//each call
-  }//orbit plugin call
+    });
+  }
 })(jQuery);
