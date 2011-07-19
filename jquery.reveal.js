@@ -121,7 +121,6 @@
       function lockModal() {
         locked = true;
       }
-
     });
   }
 })(jQuery);
