@@ -8,8 +8,8 @@
 
 
 (function($) {
-  $('a[data-reveal-id]').live('click', function(e) {
-    e.preventDefault();
+  $('a[data-reveal-id]').live('click', function(event) {
+    event.preventDefault();
     var modalLocation = $(this).attr('data-reveal-id');
     $('#' + modalLocation).reveal($(this).data());
   });
@@ -107,8 +107,8 @@
         });
       }
 
-      $('body').keyup(function(e) {
-        if(e.which === 27) { // 27 is the keycode for the Escape key
+      $('body').keyup(function(event) {
+        if(event.which === 27) { // 27 is the keycode for the Escape key
           modal.trigger('reveal:close');
         }
       });
