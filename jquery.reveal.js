@@ -57,7 +57,7 @@
           if (options.animation == "none") {
             modal.css({'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
             modalBg.css({"display": "block"});
-            unlockModal()
+            unlockModal();
           }
         }
         modal.unbind('reveal:open', openAnimation);
@@ -101,7 +101,7 @@
       });
 
       if (options.closeOnBackgroundClick) {
-        modalBg.css({"cursor": "pointer"})
+        modalBg.css({"cursor": "pointer"});
         modalBg.bind('click.modalEvent', function () {
           modal.trigger('reveal:close');
         });
@@ -121,5 +121,5 @@
         locked = true;
       }
     });
-  }
+  };
 })(jQuery);
