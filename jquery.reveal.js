@@ -82,7 +82,7 @@
               modal.css({'top': topMeasure, 'opacity': 1, 'visibility': 'hidden'});
               unlockModal();
             });
-            modalBg.css({'display' : 'none'});
+            modalBg.remove();
           }
           if (options.animation == "fade") {
             modalBg.delay(options.animationSpeed).fadeOut(options.animationSpeed);
@@ -92,11 +92,11 @@
               modal.css({'opacity': 1, 'visibility': 'hidden', 'top': topMeasure});
               unlockModal();
             });
-            modalBg.css({'display' : 'none'});
+            modalBg.remove();
           }
           if (options.animation == "none") {
             modal.css({'visibility': 'hidden', 'top': topMeasure});
-            modalBg.css({'display': 'none'});
+            modalBg.remove();
           }
         }
         modal.unbind('reveal:close', closeAnimation);
