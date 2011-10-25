@@ -7,120 +7,206 @@
 */
 
 
-(function ($) {
-  $('a[data-reveal-id]').live('click', function (event) {
-    event.preventDefault();
-    var modalLocation = $(this).attr('data-reveal-id');
-    $('#' + modalLocation).reveal($(this).data());
-  });
+(function($) {
 
-  $.fn.reveal = function (options) {
-    var defaults = {
-      animation: 'fadeAndPop',                // fade, fadeAndPop, none
-      animationSpeed: 300,                    // how fast animtions are
-      closeOnBackgroundClick: true,           // if you click background will modal close?
-      dismissModalClass: 'close-reveal-modal' // the class of a button or element that will close an open modal
-    };
-    var options = $.extend({}, defaults, options);
+/*---------------------------
+ Defaults for Reveal
+----------------------------*/
 
-    return this.each(function () {
-      var modal    = $(this),
-        topMeasure = parseInt(modal.css('top')),
-        topOffset  = modal.height() + topMeasure,
-        locked     = false,
-        modalBg    = $('.reveal-modal-bg');
+/*---------------------------
+ Listener for data-reveal-id attributes
+----------------------------*/
 
-      if (modalBg.length == 0) {
-        modalBg = $('<div class="reveal-modal-bg" />').insertAfter(modal);
-        modalBg.fadeTo('fast', 0.8);
+	$('a[data-reveal-id]').live('click', function(e) {
+	  e.preventDefault();
+	  var modalId = $(this).data('reveal-id');
+
+	  // Add ajax pulling
+	  if ($(this).data('url')) {
+
+	    // Should we load the modal within a different container?
+	    var loadWithin = ( $(this).data('reveal-loadwithin') ? $(this).data('reveal-loadwithin') : 'body');
+
+      // If there isn't a pen yet, make one
+      if (!$('#reveal-pen').length) { $(loadWithin).append('<div id="reveal-pen"></div>'); }
+
+      if ($('#'+modalId).length) {
+        // Kill any previous versions of the content, if it exists, and make sure it's in the pen
+        $('#'+modalId).empty().appendTo('#reveal-pen');
+      } else {
+        // If the modal doesn't exist, create it
+        $('#reveal-pen').append('<div style="display:none;" id="'+modalId+'" class="reveal-modal"></div>');
       }
+    }
 
-      function openAnimation() {
-        modalBg.unbind('click.modalEvent');
-        $('.' + options.dismissModalClass).unbind('click.modalEvent');
-        if (!locked) {
-          lockModal();
-          if (options.animation == "fadeAndPop") {
-            modal.css({'top': $(document).scrollTop() - topOffset, 'opacity': 0, 'visibility': 'visible'});
-            modalBg.fadeIn(options.animationSpeed / 2);
-            modal.delay(options.animationSpeed / 2).animate({
-              "top": $(document).scrollTop() + topMeasure + 'px',
-              "opacity": 1
-            }, options.animationSpeed, unlockModal);
+	  // Start the revealer
+		$('#'+modalId).reveal($(this).data());
+	});
+
+/*---------------------------
+ Extend and Execute
+----------------------------*/
+
+    $.fn.reveal = function(options) {
+        var defaults = {
+	    	animation: 'fadeAndPop', //fade, fadeAndPop, none
+		    animationspeed: 300, //how fast animtions are
+		    closeonbackgroundclick: true, //if you click background will modal close?
+		    closeonescapekey: true, //if you press escape will modal close?
+		    dismissmodalclass: 'close-reveal-modal', //the class of a button or element that will close an open modal
+		    url: false, //optional url for pulling content via ajax
+		    ajaxloaderimage: '/images/ajax-loader.gif' //optional path to ajax loader spinny thing
+    	};
+
+        //Extend dem' options
+        var options = $.extend({}, defaults, options);
+        return this.each(function() {
+
+/*---------------------------
+ Global Variables
+----------------------------*/
+        	var modal = $(this),
+        		topMeasure  = parseInt(modal.css('top')),
+				    topOffset = modal.height() + topMeasure,
+          	locked = false,
+				    modalBG = $('.reveal-modal-bg');
+
+/*---------------------------
+ Ajax Loader Image
+----------------------------*/
+          if (options.url) {
+      	    // Open the ajax loader box
+      	    modal.append('<img src="'+options.ajaxloaderimage+'" border="0" alt="" class="reveal-loader" />');
+      	  }
+
+/*---------------------------
+ Create Modal BG
+----------------------------*/
+			    if(modalBG.length == 0) {
+				    modalBG = $('<div class="reveal-modal-bg" />').insertAfter(modal);
+			    }
+
+/*---------------------------
+ Open & Close Animations
+----------------------------*/
+    			//Entrance Animations
+    			modal.bind('reveal:open', function () {
+    			  modalBG.unbind('click.modalEvent');
+    				$('.' + options.dismissmodalclass).unbind('click.modalEvent');
+    				if(!locked) {
+    					lockModal();
+    					if(options.animation == "fadeAndPop") {
+    						modal.css({'top': $(document).scrollTop()-topOffset, 'opacity' : 0, 'visibility' : 'visible', 'display' : 'block' });
+    						modalBG.fadeIn(options.animationspeed/2);
+    						modal.delay(options.animationspeed/2).animate({
+    							"top": $(document).scrollTop()+topMeasure + 'px',
+    							"opacity" : 1
+    						}, options.animationspeed,unlockModal(), function() {
+    						  loadContent();
+    						});
+    					} else if(options.animation == "fade") {
+    						modal.css({'opacity' : 0, 'visibility' : 'visible', 'display' : 'block', 'top': $(document).scrollTop()+topMeasure});
+    						modalBG.fadeIn(options.animationspeed/2);
+    						modal.delay(options.animationspeed/2).animate({
+    							"opacity" : 1
+    						}, options.animationspeed,unlockModal(), function() {
+    						  loadContent();
+    						});
+    					} else if(options.animation == "none") {
+    						modal.css({'visibility' : 'visible', 'display' : 'block', 'top':$(document).scrollTop()+topMeasure});
+    						modalBG.css({"display":"block"});
+    						loadContent();
+    						unlockModal();
+    					}
+    				}
+    				modal.unbind('reveal:open');
+    			});
+
+    			//Closing Animation
+    			modal.bind('reveal:close', function () {
+    			  if(!locked) {
+    					lockModal();
+    					if(options.animation == "fadeAndPop") {
+    						modalBG.delay(options.animationspeed).fadeOut(options.animationspeed);
+    						modal.animate({
+    							"top":  $(document).scrollTop()-topOffset + 'px',
+    							"opacity" : 0
+    						}, options.animationspeed/2, function() {
+    							modal.css({'top':topMeasure, 'opacity' : 1, 'visibility' : 'hidden'});
+    							unlockModal();
+    						});
+    					} else if(options.animation == "fade") {
+    						modalBG.delay(options.animationspeed).fadeOut(options.animationspeed);
+    						modal.animate({ 'opacity' : 0}, options.animationspeed).fadeOut(options.animationspeed, function() {
+    						  modal.css({'visibility' : 'hidden', 'top' : topMeasure});
+    						})
+    					} else if(options.animation == "none") {
+    						modal.css({'visibility' : 'hidden', 'top' : topMeasure});
+    						modalBG.css({'display' : 'none'});
+    					}
+    				}
+    				modal.unbind('reveal:close');
+    			});
+
+/*---------------------------
+ Open and add Closing Listeners
+----------------------------*/
+          //Open Modal Immediately
+        	modal.trigger('reveal:open')
+
+    			if(options.closeonbackgroundclick) {
+    				modalBG.css({"cursor":"pointer"})
+    				modalBG.bind('click.modalEvent', function () {
+    				  modal.trigger('reveal:close')
+    				});
+    			}
+
+    			if (options.closeonescapekey) {
+    			  $('body').keyup(function(e) {
+              if(e.which===27){ modal.trigger('reveal:close'); } // 27 is the keycode for the Escape key
+      			});
+      		}
+
+      		modal.find('.' + options.dismissmodalclass).live('click.modalEvent', function () {
+      		  modal.trigger('reveal:close')
+      		});
+
+/*---------------------------
+ Load Content (basically load via ajax, or do nothing)
+----------------------------*/
+          function loadContent() {
+            if (options.url) {
+              modal.append('<div style="display:none;" class="reveal-effect-container"></div>').contents('.reveal-effect-container').load(options.url, function() {
+          	    modal.find('.reveal-loader').fadeOut('fast',function() {
+          	      $(this).remove();
+          	      // Effects
+          	      if (options.animation == "fade" || options.animation == "fadeAndPop") {
+          	        modal.contents('.reveal-effect-container').fadeIn(function() {
+            	        $(this).contents().unwrap();
+            	      });
+            	    } else {
+            	      modal.contents('.reveal-effect-container').show().contents().unwrap();
+            	    }
+          	      modal.trigger('reveal:complete');
+          	    });
+          	  });
+          	} else {
+          	  modal.trigger('reveal:complete');
+          	}
           }
-          if (options.animation == "fade") {
-            modal.css({'opacity': 0, 'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
-            modalBg.fadeIn(options.animationSpeed / 2);
-            modal.delay(options.animationSpeed / 2).animate({
-              "opacity": 1
-            }, options.animationSpeed, unlockModal);
-          }
-          if (options.animation == "none") {
-            modal.css({'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
-            modalBg.css({"display": "block"});
-            unlockModal();
-          }
-        }
-        modal.unbind('reveal:open', openAnimation);
-      }
-      modal.bind('reveal:open', openAnimation);
 
-      function closeAnimation() {
-        if (!locked) {
-          lockModal();
-          if (options.animation == "fadeAndPop") {
-            modalBg.delay(options.animationSpeed).fadeOut(options.animationSpeed);
-            modal.animate({
-              "top":  $(document).scrollTop() - topOffset + 'px',
-              "opacity": 0
-            }, options.animationSpeed / 2, function () {
-              modal.css({'top': topMeasure, 'opacity': 1, 'visibility': 'hidden'});
-              unlockModal();
-            });
-          }
-          if (options.animation == "fade") {
-            modalBg.delay(options.animationSpeed).fadeOut(options.animationSpeed);
-            modal.animate({
-              "opacity" : 0
-            }, options.animationSpeed, function () {
-              modal.css({'opacity': 1, 'visibility': 'hidden', 'top': topMeasure});
-              unlockModal();
-            });
-          }
-          if (options.animation == "none") {
-            modal.css({'visibility': 'hidden', 'top': topMeasure});
-            modalBg.css({'display': 'none'});
-          }
-        }
-        modal.unbind('reveal:close', closeAnimation);
-      }
-      modal.bind('reveal:close', closeAnimation);
-      modal.trigger('reveal:open');
 
-      var closeButton = $('.' + options.dismissModalClass).bind('click.modalEvent', function () {
-        modal.trigger('reveal:close');
-      });
+/*---------------------------
+ Animations Locks
+----------------------------*/
+    			function unlockModal() {
+    				locked = false;
+    			}
+    			function lockModal() {
+    				locked = true;
+    			}
 
-      if (options.closeOnBackgroundClick) {
-        modalBg.css({"cursor": "pointer"});
-        modalBg.bind('click.modalEvent', function () {
-          modal.trigger('reveal:close');
-        });
-      }
-
-      $('body').keyup(function (event) {
-        if (event.which === 27) { // 27 is the keycode for the Escape key
-          modal.trigger('reveal:close');
-        }
-      });
-
-      function unlockModal() {
-        locked = false;
-      }
-
-      function lockModal() {
-        locked = true;
-      }
-    });
-  };
+        });//each call
+    }//orbit plugin call
 })(jQuery);
+
