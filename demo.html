@@ -38,10 +38,20 @@
 			None
 		</a>
 
+		<a href="#" class="big-link" onclick="$('#scriptedModal').reveal({ closeOnBackgroundClick: false })">
+			Open and Close With Script
+		</a>
+
 		<div id="myModal" class="reveal-modal">
 			<h1>Reveal Modal Goodness</h1>
 			<p>This is a default modal in all its glory, but any of the styles here can easily be changed in the CSS.</p>
 			<a class="close-reveal-modal">&#215;</a>
+		</div>
+
+		<div id="scriptedModal" class="reveal-modal">
+			<h1>Reveal Modal Goodness</h1>
+			<p>This is a default modal in all its glory, but any of the styles here can easily be changed in the CSS.</p>
+			<a href="#" onclick="$('#scriptedModal').closeReveal();return false;">Close</a>
 		</div>
 			
 	</body>

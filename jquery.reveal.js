@@ -123,4 +123,8 @@
       }
     });
   };
+
+  $.fn.closeReveal = function () {
+    $(this).trigger('reveal:close');
+  };
 })(jQuery);
