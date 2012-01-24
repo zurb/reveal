@@ -28,7 +28,11 @@
         topMeasure = parseInt(modal.css('top')),
         topOffset  = modal.height() + topMeasure,
         locked     = false,
-        modalBg    = $('.reveal-modal-bg');
+        modalBg    = $('.reveal-modal-bg'),
+        animationComplete = function() {
+          modal.trigger('reveal:visible');
+          unlockModal();
+        }
 
       if (modalBg.length == 0) {
         modalBg = $('<div class="reveal-modal-bg" />').insertAfter(modal);
@@ -46,19 +50,19 @@
             modal.delay(options.animationSpeed / 2).animate({
               "top": $(document).scrollTop() + topMeasure + 'px',
               "opacity": 1
-            }, options.animationSpeed, unlockModal);
+            }, options.animationSpeed, animationComplete);
           }
           if (options.animation == "fade") {
             modal.css({'opacity': 0, 'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
             modalBg.fadeIn(options.animationSpeed / 2);
             modal.delay(options.animationSpeed / 2).animate({
               "opacity": 1
-            }, options.animationSpeed, unlockModal);
+            }, options.animationSpeed, animationComplete);
           }
           if (options.animation == "none") {
             modal.css({'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
             modalBg.css({"display": "block"});
-            unlockModal();
+            animationComplete();
           }
         }
         modal.unbind('reveal:open', openAnimation);
