@@ -39,33 +39,35 @@
         modalBg.fadeTo('fast', 0.8);
       }
 
-
-    /* Internal callback handlers */
-
-    /**
-     *  @func: modalOpened
-     *  @desc: calls the unlockModal method. Then executes the onOpened callback.
-     */
-    function modalOpened() {
-      unlockModal();
-      options.onOpened.call( [], modal ); // Execute the onOpened callback - modal is fully visible
-    }
-       /**
-     *  @func: modalClosed
-     *  @desc: calls the unlockModal method. Then executes the onClosed callback.
-     */
-    function modalClosed() {
-      unlockModal();
-      options.onClosed.call( [], modal ); // Execute the onClosed callback - Modal is closed
+    function unlockModal() {
+      locked = false;
     }
 
-      function unlockModal() {
-        locked = false;
+    function lockModal() {
+      locked = true;
+    }
+
+      /* Internal callback handlers */
+
+      /**
+       *  @func: modalOpened
+       *  @desc: calls the unlockModal method. Then executes the onOpened callback.
+       */
+      function modalOpened() {
+        unlockModal();
+        options.onOpened.call( [], modal ); // Execute the onOpened callback - modal is fully visible
+      }
+      
+      /**
+       *  @func: modalClosed
+       *  @desc: calls the unlockModal method. Then executes the onClosed callback.
+       */
+      function modalClosed() {
+        unlockModal();
+        options.onClosed.call( [], modal ); // Execute the onClosed callback - Modal is closed
       }
 
-      function lockModal() {
-        locked = true;
-      }
+      
 
 
       function openAnimation() {
