@@ -29,8 +29,12 @@
         topOffset  = modal.height() + topMeasure,
         locked     = false,
         modalBg    = $('.reveal-modal-bg'),
-        animationComplete = function() {
+        openAnimationComplete = function() {
           modal.trigger('reveal:visible');
+          unlockModal();
+        },
+        closeAnimationComplete = function() {
+          modal.trigger('reveal:hidden');
           unlockModal();
         }
 
@@ -50,19 +54,19 @@
             modal.delay(options.animationSpeed / 2).animate({
               "top": $(document).scrollTop() + topMeasure + 'px',
               "opacity": 1
-            }, options.animationSpeed, animationComplete);
+            }, options.animationSpeed, openAnimationComplete);
           }
           if (options.animation == "fade") {
             modal.css({'opacity': 0, 'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
             modalBg.fadeIn(options.animationSpeed / 2);
             modal.delay(options.animationSpeed / 2).animate({
               "opacity": 1
-            }, options.animationSpeed, animationComplete);
+            }, options.animationSpeed, openAnimationComplete);
           }
           if (options.animation == "none") {
             modal.css({'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
             modalBg.css({"display": "block"});
-            animationComplete();
+            openAnimationComplete();
           }
         }
         modal.unbind('reveal:open', openAnimation);
@@ -79,7 +83,7 @@
               "opacity": 0
             }, options.animationSpeed / 2, function () {
               modal.css({'top': topMeasure, 'opacity': 1, 'visibility': 'hidden'});
-              unlockModal();
+              closeAnimationComplete();
             });
           }
           if (options.animation == "fade") {
@@ -88,12 +92,13 @@
               "opacity" : 0
             }, options.animationSpeed, function () {
               modal.css({'opacity': 1, 'visibility': 'hidden', 'top': topMeasure});
-              unlockModal();
+              closeAnimationComplete();
             });
           }
           if (options.animation == "none") {
             modal.css({'visibility': 'hidden', 'top': topMeasure});
             modalBg.css({'display': 'none'});
+            closeAnimationComplete();
           }
         }
         modal.unbind('reveal:close', closeAnimation);
