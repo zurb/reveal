@@ -1,7 +1,7 @@
 <h1>Reveal: A jQuery Plugin For Modals</h1>
 <p>Reveal is a jQuery plugin for dead simple modals that comes with some sexy base CSS and can be implemented programatically or with the new HTML5 custom data attributes (data-attribute).</p>
 
-<p><strong>Note: This version of Reveal has been deprecated and will no longer be developed or supported. For the most recent code, check out the responsive version of Orbit included in <a href="http://foundation.zurb.com">Foundation</a>, our rapid prototyping and production framework.</p>
+<p><strong>Note: This version of Reveal has been deprecated and will no longer be developed or supported. For the most recent code, check out the responsive version of Reveal included in <a href="http://foundation.zurb.com">Foundation</a>, our rapid prototyping and production framework.</p>
 
 <h3>Download & Documentation </h3>
 <p>All of the docs and the download link are on a playground page here: <a href="http://www.zurb.com/playground/reveal-modal-plugin">http://www.zurb.com/playground/reveal-modal-plugin</a></p>
