@@ -28,10 +28,10 @@
         topMeasure = parseInt(modal.css('top')),
         topOffset  = modal.height() + topMeasure,
         locked     = false,
-        modalBg    = $('.reveal-modal-bg');
+        modalBg    = $('.reveal-modal-bg-closed');
 
       if (modalBg.length == 0) {
-        modalBg = $('<div class="reveal-modal-bg" />').insertAfter(modal);
+        modalBg = $('<div class="reveal-modal-bg-closed" />').insertAfter(modal);
         modalBg.fadeTo('fast', 0.8);
       }
 
@@ -42,6 +42,8 @@
           lockModal();
           if (options.animation == "fadeAndPop") {
             modal.css({'top': $(document).scrollTop() - topOffset, 'opacity': 0, 'visibility': 'visible'});
+            modalBg.removeClass("reveal-modal-bg-closed");
+            modalBg.addClass("reveal-modal-bg-open");
             modalBg.fadeIn(options.animationSpeed / 2);
             modal.delay(options.animationSpeed / 2).animate({
               "top": $(document).scrollTop() + topMeasure + 'px',
@@ -50,6 +52,8 @@
           }
           if (options.animation == "fade") {
             modal.css({'opacity': 0, 'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
+            modalBg.removeClass("reveal-modal-bg-closed");
+            modalBg.addClass("reveal-modal-bg-open");
             modalBg.fadeIn(options.animationSpeed / 2);
             modal.delay(options.animationSpeed / 2).animate({
               "opacity": 1
@@ -57,7 +61,8 @@
           }
           if (options.animation == "none") {
             modal.css({'visibility': 'visible', 'top': $(document).scrollTop() + topMeasure});
-            modalBg.css({"display": "block"});
+            modalBg.removeClass("reveal-modal-bg-closed");
+            modalBg.addClass("reveal-modal-bg-open");
             unlockModal();
           }
         }
@@ -77,6 +82,7 @@
               modal.css({'top': topMeasure, 'opacity': 1, 'visibility': 'hidden'});
               unlockModal();
             });
+            modalBg.remove();
           }
           if (options.animation == "fade") {
             modalBg.delay(options.animationSpeed).fadeOut(options.animationSpeed);
@@ -86,10 +92,11 @@
               modal.css({'opacity': 1, 'visibility': 'hidden', 'top': topMeasure});
               unlockModal();
             });
+            modalBg.remove();
           }
           if (options.animation == "none") {
             modal.css({'visibility': 'hidden', 'top': topMeasure});
-            modalBg.css({'display': 'none'});
+            modalBg.remove();
           }
         }
         modal.unbind('reveal:close', closeAnimation);
@@ -124,3 +131,4 @@
     });
   };
 })(jQuery);
+
