@@ -19,7 +19,8 @@
       animation: 'fadeAndPop',                // fade, fadeAndPop, none
       animationSpeed: 300,                    // how fast animtions are
       closeOnBackgroundClick: true,           // if you click background will modal close?
-      dismissModalClass: 'close-reveal-modal' // the class of a button or element that will close an open modal
+      dismissModalClass: 'close-reveal-modal', // the class of a button or element that will close an open modal
+      modalbgclass: 'reveal-modal-bg' //the class for modal background
     };
     var options = $.extend({}, defaults, options);
 
@@ -28,10 +29,10 @@
         topMeasure = parseInt(modal.css('top')),
         topOffset  = modal.height() + topMeasure,
         locked     = false,
-        modalBg    = $('.reveal-modal-bg');
+        modalBg    = $('.'+options.modalbgclass);
 
       if (modalBg.length == 0) {
-        modalBg = $('<div class="reveal-modal-bg" />').insertAfter(modal);
+        modalBg = $('<div class="'+options.modalbgclass+'" />').insertAfter(modal);
         modalBg.fadeTo('fast', 0.8);
       }
 
