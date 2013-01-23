@@ -20,6 +20,7 @@
       animationSpeed: 300,                    // how fast animtions are
       closeOnBackgroundClick: true,           // if you click background will modal close?
       dismissModalClass: 'close-reveal-modal' // the class of a button or element that will close an open modal
+      showonload: true                        // if you want the modal to automatically load on instantiation
     };
     var options = $.extend({}, defaults, options);
 
@@ -95,7 +96,9 @@
         modal.unbind('reveal:close', closeAnimation);
       }
       modal.bind('reveal:close', closeAnimation);
-      modal.trigger('reveal:open');
+      if (options.showonload){
+        modal.trigger('reveal:open');
+      }
 
       var closeButton = $('.' + options.dismissModalClass).bind('click.modalEvent', function () {
         modal.trigger('reveal:close');
