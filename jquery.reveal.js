@@ -90,6 +90,7 @@
           if (options.animation == "none") {
             modal.css({'visibility': 'hidden', 'top': topMeasure});
             modalBg.css({'display': 'none'});
+            unlockModal();
           }
         }
         modal.unbind('reveal:close', closeAnimation);
