@@ -20,6 +20,8 @@
       animationSpeed: 300,                    // how fast animtions are
       closeOnBackgroundClick: true,           // if you click background will modal close?
       dismissModalClass: 'close-reveal-modal' // the class of a button or element that will close an open modal
+      onCloseModal: function(){},             // This function will be called when the modal closes
+      onFinishModal: function(){}             // This function will be called after closing animation finishes
     };
     var options = $.extend({}, defaults, options);
 
@@ -76,6 +78,7 @@
             }, options.animationSpeed / 2, function () {
               modal.css({'top': topMeasure, 'opacity': 1, 'visibility': 'hidden'});
               unlockModal();
+              options.onFinishModal();
             });
           }
           if (options.animation == "fade") {
@@ -85,12 +88,15 @@
             }, options.animationSpeed, function () {
               modal.css({'opacity': 1, 'visibility': 'hidden', 'top': topMeasure});
               unlockModal();
+              options.onFinishModal();
             });
           }
           if (options.animation == "none") {
             modal.css({'visibility': 'hidden', 'top': topMeasure});
             modalBg.css({'display': 'none'});
+            options.onFinishModal();
           }
+          options.onCloseModal();
         }
         modal.unbind('reveal:close', closeAnimation);
       }
