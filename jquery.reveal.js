@@ -8,6 +8,7 @@
 
 
 (function ($) {
+  // Use ".on" method instead of ".live"
   $('a[data-reveal-id]').on('click', function (event) {
     event.preventDefault();
     var modalLocation = $(this).attr('data-reveal-id');
