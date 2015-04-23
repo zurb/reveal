@@ -8,11 +8,26 @@
 
 
 (function ($) {
-  $('a[data-reveal-id]').live('click', function (event) {
-    event.preventDefault();
-    var modalLocation = $(this).attr('data-reveal-id');
-    $('#' + modalLocation).reveal($(this).data());
-  });
+  var jQueryVer = window.jQuery.fn.jquery;
+  var versionArr = jQueryVer.split('.');
+
+  // Check jQuery version
+  if (versionArr[0] > 1 || versionArr[1] > 6) {
+    // Use ".on" method instead of ".live"
+    $('a[data-reveal-id]').on('click', function (event) {
+      event.preventDefault();
+      var modalLocation = $(this).attr('data-reveal-id');
+      $('#' + modalLocation).reveal($(this).data());
+    });
+  } else {
+    // Use .live in jQuery 1.6 below
+    $('a[data-reveal-id]').live('click', function (event) {
+      event.preventDefault();
+      var modalLocation = $(this).attr('data-reveal-id');
+      $('#' + modalLocation).reveal($(this).data());
+    });
+  }
+
 
   $.fn.reveal = function (options) {
     var defaults = {
