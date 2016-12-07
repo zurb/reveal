@@ -19,6 +19,7 @@
       animation: 'fadeAndPop',                // fade, fadeAndPop, none
       animationSpeed: 300,                    // how fast animtions are
       closeOnBackgroundClick: true,           // if you click background will modal close?
+      closeOnEscapeKey: true,                 // if you close on 'esc' key will modal close?
       dismissModalClass: 'close-reveal-modal' // the class of a button or element that will close an open modal
     };
     var options = $.extend({}, defaults, options);
@@ -108,11 +109,13 @@
         });
       }
 
-      $('body').keyup(function (event) {
-        if (event.which === 27) { // 27 is the keycode for the Escape key
-          modal.trigger('reveal:close');
-        }
-      });
+      if (options.closeOnEscapeKey) {
+        $('body').keyup(function (event) {
+          if (event.which === 27) { // 27 is the keycode for the Escape key
+            modal.trigger('reveal:close');
+          }
+        });
+      }
 
       function unlockModal() {
         locked = false;
@@ -122,5 +125,9 @@
         locked = true;
       }
     });
+  };
+
+  $.fn.closeReveal = function () {
+    $(this).trigger('reveal:close');
   };
 })(jQuery);
