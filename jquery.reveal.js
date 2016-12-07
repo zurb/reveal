@@ -13,7 +13,12 @@
     var modalLocation = $(this).attr('data-reveal-id');
     $('#' + modalLocation).reveal($(this).data());
   });
-
+  
+  // Call jQuery.unreveal() or $.unreveal() to programatically hide modals.
+  $.fn.unreveal = function() {
+	  $('body').trigger({ type : 'keyup', which : 27 });
+  };
+  
   $.fn.reveal = function (options) {
     var defaults = {
       animation: 'fadeAndPop',                // fade, fadeAndPop, none
